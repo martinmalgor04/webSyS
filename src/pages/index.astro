@@ -7,6 +7,8 @@ import ProductsSection from '../components/organisms/ProductsSection.astro';
 import ClientsSection from '../components/organisms/ClientsSection.astro';
 import Footer from '../components/organisms/Footer.astro';
 
+console.log("Build process started for index page.");
+
 // GROQ query to fetch all homepage data
 const query = `*[_type == "homepage" && _id == "homepage"][0]{
   heroCarousel[]{
@@ -26,7 +28,9 @@ const query = `*[_type == "homepage" && _id == "homepage"][0]{
   }
 }`;
 
+console.log("Attempting to fetch data from Sanity...");
 const data = await sanityClient.fetch(query) || {};
+console.log("Sanity fetch completed. Data received:", !!data);
 
 const pageTitle = data.heroCarousel?.[0]?.title || "Servicios & Sistemas";
 const pageDescription = data.heroCarousel?.[0]?.subtitle || "Gestión Integral de tu Informática";
