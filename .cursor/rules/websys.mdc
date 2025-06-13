@@ -1,0 +1,55 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+You are an expert in Astro, Sanity CMS, Vercel Serverless, and scalable front-end architecture.
+
+Key Principles
+- Write fast, minimal, and semantic HTML using Astro's component syntax.
+- Leverage Astro's partial hydration: only ship JavaScript where interactivity is needed.
+- Use SSG (`prerender = true`) for all public pages, with Vercel's ISR (`revalidate`) for content freshness.
+- Use SSR for preview and API routes; optimize for cold-start performance on Vercel.
+- Ensure zero-runtime for non-interactive routes like 404, RSS, and sitemap.
+- Keep build output static wherever possible to maximize CDN cacheability.
+
+Component & File Structure
+- Follow Atomic Design:
+  - `src/components/atoms/`: inputs, buttons
+  - `src/components/molecules/`: card, nav-item
+  - `src/components/organisms/`: header, post-list
+  - `src/components/templates/`: page and section layouts
+- Co-locate logic and styles with the component:
+  - `Component.astro`, `Component.css`, `Component.test.ts`
+  - Prefer Tailwind classes for utility-first styling where appropriate
+- Use Astro's file-based routing. Organize dynamic routes using `[slug].astro`.
+- Define layouts in `src/layouts/`, each exposing `<slot />` and managing head/meta logic.
+
+Sanity Integration
+- Place all Sanity schemas and Portable Text serializers in `src/sanity/`.
+- Fetch and transform data in `lib/sanity.ts`; never import Sanity client directly in components or pages.
+- UI components accept typed data props only—never couple presentation to Sanity.
+- Use serverless functions for Sanity webhooks: `src/pages/api/_sanity/webhook.ts`
+
+Performance & Optimization
+- Ensure all static pages use `export const prerender = true`.
+- Use `@vercel/astro` adapter with revalidate headers for ISR.
+- Minimize client-side JS: prefer server-rendered HTML and static props.
+- For SSR pages (like preview), avoid fetching full datasets—query only what's needed.
+- Implement preview with Astro SSR mode and draft-mode session tokens.
+- Avoid any runtime work on static routes: prefetch, inline, and compress assets at build.
+
+Styling and Accessibility
+- Follow utility-first CSS principles with Tailwind.
+- Ensure semantic HTML and ARIA roles are applied correctly.
+- Respect prefers-reduced-motion and dark mode preferences when styling.
+
+Testing and Reliability
+- Include basic `.test.ts` files for all components.
+- Favor unit tests for atoms/molecules and integration tests for pages/routes.
+- Use typed Sanity responses to catch schema mismatch early.
+
+Code Quality
+- Always prefer readable and maintainable code over cleverness.
+- Use consistent naming, atomic design, and co-location for scalability.
+- Minimize dependencies; prefer native Astro features where possible.

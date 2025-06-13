@@ -1,0 +1,43 @@
+---
+import { sanityClient } from '../lib/sanityClient';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/organisms/Header.astro';
+import HeroSection from '../components/organisms/HeroSection.astro';
+import ProductsSection from '../components/organisms/ProductsSection.astro';
+import ClientsSection from '../components/organisms/ClientsSection.astro';
+import Footer from '../components/organisms/Footer.astro';
+
+// GROQ query to fetch all homepage data
+const query = `*[_type == "homepage" && _id == "homepage"][0]{
+  heroCarousel[]{
+    title,
+    subtitle,
+    image
+  },
+  "products": products[]->{
+    title,
+    description,
+    logo,
+    color
+  },
+  "clientLogos": clientLogos[]->{
+    name,
+    logo
+  }
+}`;
+
+const data = await sanityClient.fetch(query) || {};
+
+const pageTitle = data.heroCarousel?.[0]?.title || "Servicios & Sistemas";
+const pageDescription = data.heroCarousel?.[0]?.subtitle || "Gestión Integral de tu Informática";
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+	<Header />
+	<main>
+		<HeroSection slides={data.heroCarousel} />
+		<ProductsSection products={data.products} />
+		<ClientsSection clientLogos={data.clientLogos} />
+	</main>
+	<Footer />
+</Layout> 

@@ -1,0 +1,33 @@
+---
+import ProductCard from '../molecules/ProductCard.astro';
+
+interface Product {
+    title: string;
+    description: string;
+    logo: any; // SanityImageSource
+    color: {
+        hex: string;
+    };
+}
+
+interface Props {
+    products: Product[];
+}
+
+const { products } = Astro.props;
+---
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-12">Productos</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {products?.map(product => (
+                <ProductCard 
+                    bgColor={product.color?.hex || '#000000'}
+                    title={product.title}
+                    description={product.description}
+                    logo={product.logo}
+                />
+            ))}
+        </div>
+    </div>
+</section> 

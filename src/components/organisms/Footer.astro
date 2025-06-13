@@ -1,0 +1,73 @@
+---
+const footerSections = {
+    secciones: [
+        { name: 'Nosotros', href: '/nosotros' },
+        { name: 'Productos', href: '/productos' },
+        { name: 'Nuestro E-Commerce', href: '#' },
+        { name: 'Soporte', href: '/soporte' },
+        { name: 'Contacto', href: '/contacto' },
+    ],
+    tangoSoftware: [
+        { name: 'Tango Gestión', href: '#' },
+        { name: 'Tango Estudios Contables', href: '#' },
+        { name: 'Tango Restó', href: '#' },
+        { name: 'Tango Punto de Venta', href: '#' },
+        { name: 'Tango Delta', href: '#' },
+    ],
+};
+
+const partnerLogos = [
+    { name: 'Tango Software', src: '/images/partners/tango.png' },
+    { name: 'Lenovo', src: '/images/partners/lenovo.png' },
+    { name: 'HP', src: '/images/partners/hp.png' },
+    { name: 'Panda', src: '/images/partners/panda.png' },
+    { name: 'Sophos', src: '/images/partners/sophos.png' },
+];
+---
+
+<footer class="bg-gray-100 text-gray-600 pt-16 pb-8">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            <!-- Columna 1: Logo y Contacto -->
+            <div class="space-y-4">
+                <img src="/logo.svg" alt="Servicios & Sistemas Logo" class="h-10 w-auto mb-4">
+                <p>San Martín 1180<br>Corrientes, Argentina</p>
+                <p>Teléfono: +54 3794 426022</p>
+                <p>Email: info@serviciosysistemas.com.ar</p>
+            </div>
+
+            <!-- Columna 2: Secciones -->
+            <div>
+                <h3 class="font-bold text-gray-800 mb-4">Secciones</h3>
+                <ul class="space-y-2">
+                    {footerSections.secciones.map(link => (
+                        <li><a href={link.href} class="hover:text-brand-blue">{link.name}</a></li>
+                    ))}
+                </ul>
+            </div>
+
+            <!-- Columna 3: Tango Software -->
+            <div>
+                <h3 class="font-bold text-gray-800 mb-4">Tango Software</h3>
+                <ul class="space-y-2">
+                    {footerSections.tangoSoftware.map(link => (
+                        <li><a href={link.href} class="hover:text-brand-blue">{link.name}</a></li>
+                    ))}
+                </ul>
+            </div>
+
+            <!-- Columna 4: Representante Oficial -->
+            <div>
+                <h3 class="font-bold text-gray-800 mb-4">Representante Oficial</h3>
+                <div class="flex flex-wrap gap-4 items-center">
+                   {partnerLogos.map(partner => (
+                       <img src={partner.src} alt={partner.name} class="h-12 w-auto object-contain" />
+                   ))}
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-300 pt-8 text-center text-sm">
+            <p>&copy; {new Date().getFullYear()} Servicios & Sistemas. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer> 

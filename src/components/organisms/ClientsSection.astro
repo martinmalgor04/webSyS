@@ -1,0 +1,64 @@
+---
+import { imageUrlFor } from '../../lib/sanityClient';
+import Splide from '@splidejs/splide';
+import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
+import '@splidejs/splide/css';
+
+interface ClientLogo {
+    name: string;
+    logo: any; // SanityImageSource
+}
+
+interface Props {
+    clientLogos: ClientLogo[];
+}
+
+const { clientLogos } = Astro.props;
+---
+
+<section class="py-16 bg-gray-50 overflow-hidden">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-12">Confían en Nosotros</h2>
+        <div id="clients-carousel" class="splide" aria-label="Carrusel de logos de clientes">
+            <div class="splide__track">
+                <ul class="splide__list">
+                    {clientLogos?.map(logo => (
+                        <li class="splide__slide flex items-center justify-center">
+                            <img src={imageUrlFor(logo.logo).height(60).url()} alt={logo.name} class="h-14 w-auto object-contain mx-8" />
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    import Splide from '@splidejs/splide';
+    import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const splide = new Splide('#clients-carousel', {
+            type   : 'loop',
+            drag   : false,
+            focus  : 'center',
+            perPage: 5,
+            arrows: false,
+            pagination: false,
+            autoScroll: {
+                speed: 1,
+                pauseOnHover: true,
+            },
+            breakpoints: {
+                768: {
+                    perPage: 3,
+                },
+                640: {
+                    perPage: 2,
+                }
+            }
+        });
+
+        splide.mount({ AutoScroll });
+    });
+</script> 

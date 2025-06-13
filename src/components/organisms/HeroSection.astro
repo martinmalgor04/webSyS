@@ -1,0 +1,54 @@
+---
+import { imageUrlFor } from '../../lib/sanityClient';
+import '@splidejs/splide/css';
+
+interface Slide {
+    title: string;
+    subtitle: string;
+    image: any; // SanityImageSource
+}
+
+interface Props {
+    slides: Slide[];
+}
+
+const { slides } = Astro.props;
+---
+
+<div id="hero-carousel" class="splide" aria-label="Carrusel de bienvenida">
+    <div class="splide__track h-[60vh] min-h-[400px]">
+        <ul class="splide__list">
+            {slides?.map(slide => (
+                <li class="splide__slide relative text-white bg-cover bg-center" style={`background-image: url(${imageUrlFor(slide.image).width(1920).height(1080).url()})`}>
+                    <div class="absolute inset-0 bg-black/60"></div>
+                    <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
+                        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
+                            {slide.title}
+                        </h1>
+                        <p class="text-lg md:text-xl max-w-3xl mb-8">
+                            {slide.subtitle}
+                        </p>
+                        <a href="#" class="border-2 border-white text-white px-8 py-3 rounded-md font-bold hover:bg-white hover:text-gray-800 transition-colors duration-300">
+                            Leer Más
+                        </a>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    </div>
+</div>
+
+<script>
+    import Splide from '@splidejs/splide';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new Splide('#hero-carousel', {
+            type       : 'loop',
+            autoplay   : true,
+            interval   : 5000,
+            pauseOnHover: false,
+            arrows     : true,
+            pagination : true,
+        }).mount();
+    });
+</script> 
