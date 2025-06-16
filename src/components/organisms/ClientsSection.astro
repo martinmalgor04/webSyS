@@ -1,19 +1,18 @@
 ---
 import { imageUrlFor } from '../../lib/sanityClient';
-import Splide from '@splidejs/splide';
-import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
+import type { ClientLogo } from '../../lib/sanity';
 import '@splidejs/splide/css';
-
-interface ClientLogo {
-    name: string;
-    logo: any; // SanityImageSource
-}
 
 interface Props {
     clientLogos: ClientLogo[];
 }
 
-const { clientLogos } = Astro.props;
+const { clientLogos = [] } = Astro.props;
+
+// Validar que haya logos para mostrar
+if (!clientLogos || clientLogos.length === 0) {
+    return null;
+}
 ---
 
 <section class="py-16 bg-gray-50 overflow-hidden">
@@ -22,11 +21,26 @@ const { clientLogos } = Astro.props;
         <div id="clients-carousel" class="splide" aria-label="Carrusel de logos de clientes">
             <div class="splide__track">
                 <ul class="splide__list">
-                    {clientLogos?.map(logo => (
-                        <li class="splide__slide flex items-center justify-center">
-                            <img src={imageUrlFor(logo.logo).height(60).url()} alt={logo.name} class="h-14 w-auto object-contain mx-8" />
-                        </li>
-                    ))}
+                    {clientLogos.map(logo => {
+                        let logoUrl = '';
+                        try {
+                            logoUrl = imageUrlFor(logo.logo).height(60).url();
+                        } catch (error) {
+                            console.error('Error generating client logo URL:', error);
+                            return null;
+                        }
+                        
+                        return (
+                            <li class="splide__slide flex items-center justify-center">
+                                <img 
+                                    src={logoUrl} 
+                                    alt={logo.name || 'Logo de cliente'} 
+                                    class="h-14 w-auto object-contain mx-8" 
+                                    loading="lazy"
+                                />
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
         </div>
@@ -37,28 +51,32 @@ const { clientLogos } = Astro.props;
     import Splide from '@splidejs/splide';
     import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const splide = new Splide('#clients-carousel', {
-            type   : 'loop',
-            drag   : false,
-            focus  : 'center',
-            perPage: 5,
-            arrows: false,
-            pagination: false,
-            autoScroll: {
-                speed: 1,
-                pauseOnHover: true,
-            },
-            breakpoints: {
-                768: {
-                    perPage: 3,
+    // Solo inicializar si el elemento existe
+    const carousel = document.getElementById('clients-carousel');
+    if (carousel) {
+        document.addEventListener('DOMContentLoaded', () => {
+            const splide = new Splide('#clients-carousel', {
+                type   : 'loop',
+                drag   : false,
+                focus  : 'center',
+                perPage: 5,
+                arrows: false,
+                pagination: false,
+                autoScroll: {
+                    speed: 1,
+                    pauseOnHover: true,
                 },
-                640: {
-                    perPage: 2,
+                breakpoints: {
+                    768: {
+                        perPage: 3,
+                    },
+                    640: {
+                        perPage: 2,
+                    }
                 }
-            }
-        });
+            });
 
-        splide.mount({ AutoScroll });
-    });
+            splide.mount({ AutoScroll });
+        });
+    }
 </script> 

@@ -1,18 +1,36 @@
 ---
 import { imageUrlFor } from '../../lib/sanityClient';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 interface Props {
     bgColor: string;
     title: string;
     description: string;
-    logo: SanityImageSource;
+    logo: any; // SanityImageSource
 }
 
-const { bgColor, title, description, logo } = Astro.props;
+const { bgColor = '#000000', title = '', description = '', logo } = Astro.props;
+
+// Validar que los props requeridos existan
+if (!title || !logo) {
+    return null;
+}
+
+// Generar URL de imagen de forma segura
+let logoUrl = '';
+try {
+    logoUrl = imageUrlFor(logo).width(200).url();
+} catch (error) {
+    console.error('Error generating logo URL:', error);
+    logoUrl = '/images/placeholder-logo.svg'; // Usar placeholder si falla
+}
 ---
 <div class="rounded-lg p-8 text-white flex flex-col h-full" style={`background-color: ${bgColor}`}>
-    <img src={imageUrlFor(logo).width(200).url()} alt={`Logo ${title}`} class="h-12 w-auto mb-4 filter brightness-0 invert">
+    <img 
+        src={logoUrl} 
+        alt={`Logo ${title}`} 
+        class="h-12 w-auto mb-4 filter brightness-0 invert"
+        loading="lazy"
+    >
     <h3 class="text-3xl font-light mb-4">{title}</h3>
     <p class="flex-grow mb-6">{description}</p>
     <a href="#" class="mt-auto bg-white text-gray-800 px-6 py-2 rounded-md font-bold self-start hover:bg-gray-200 transition-colors">

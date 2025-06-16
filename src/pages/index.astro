@@ -1,5 +1,5 @@
 ---
-import { sanityClient } from '../lib/sanityClient';
+import { getHomepageData } from '../lib/sanity';
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/organisms/Header.astro';
 import HeroSection from '../components/organisms/HeroSection.astro';
@@ -7,30 +7,11 @@ import ProductsSection from '../components/organisms/ProductsSection.astro';
 import ClientsSection from '../components/organisms/ClientsSection.astro';
 import Footer from '../components/organisms/Footer.astro';
 
-console.log("Build process started for index page.");
+// Habilitar prerender para esta página estática
+export const prerender = true;
 
-// GROQ query to fetch all homepage data
-const query = `*[_type == "homepage" && _id == "homepage"][0]{
-  heroCarousel[]{
-    title,
-    subtitle,
-    image
-  },
-  "products": products[]->{
-    title,
-    description,
-    logo,
-    color
-  },
-  "clientLogos": clientLogos[]->{
-    name,
-    logo
-  }
-}`;
-
-console.log("Attempting to fetch data from Sanity...");
-const data = await sanityClient.fetch(query) || {};
-console.log("Sanity fetch completed. Data received:", !!data);
+// Obtener datos de la homepage con manejo de errores
+const data = await getHomepageData();
 
 const pageTitle = data.heroCarousel?.[0]?.title || "Servicios & Sistemas";
 const pageDescription = data.heroCarousel?.[0]?.subtitle || "Gestión Integral de tu Informática";

@@ -4,7 +4,25 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
+  output: 'hybrid',
   integrations: [tailwind()],
-  adapter: vercel()
+  adapter: vercel({
+    speedInsights: true,
+    webAnalytics: true,
+    maxDuration: 10,
+  }),
+  build: {
+    inlineStylesheets: 'auto',
+  },
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'splide': ['@splidejs/splide'],
+          }
+        }
+      }
+    }
+  }
 });

@@ -1,24 +1,24 @@
 ---
 import { imageUrlFor } from '../../lib/sanityClient';
+import type { HeroSlide } from '../../lib/sanity';
 import '@splidejs/splide/css';
 
-interface Slide {
-    title: string;
-    subtitle: string;
-    image: any; // SanityImageSource
-}
-
 interface Props {
-    slides: Slide[];
+    slides: HeroSlide[];
 }
 
-const { slides } = Astro.props;
+const { slides = [] } = Astro.props;
+
+// Validar que hay slides antes de renderizar
+if (!slides || slides.length === 0) {
+    return null;
+}
 ---
 
 <div id="hero-carousel" class="splide" aria-label="Carrusel de bienvenida">
     <div class="splide__track h-[60vh] min-h-[400px]">
         <ul class="splide__list">
-            {slides?.map(slide => (
+            {slides.map(slide => (
                 <li class="splide__slide relative text-white bg-cover bg-center" style={`background-image: url(${imageUrlFor(slide.image).width(1920).height(1080).url()})`}>
                     <div class="absolute inset-0 bg-black/60"></div>
                     <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
@@ -41,14 +41,18 @@ const { slides } = Astro.props;
 <script>
     import Splide from '@splidejs/splide';
 
-    document.addEventListener('DOMContentLoaded', () => {
-        new Splide('#hero-carousel', {
-            type       : 'loop',
-            autoplay   : true,
-            interval   : 5000,
-            pauseOnHover: false,
-            arrows     : true,
-            pagination : true,
-        }).mount();
-    });
+    // Solo inicializar si el elemento existe
+    const carousel = document.getElementById('hero-carousel');
+    if (carousel) {
+        document.addEventListener('DOMContentLoaded', () => {
+            new Splide('#hero-carousel', {
+                type       : 'loop',
+                autoplay   : true,
+                interval   : 5000,
+                pauseOnHover: false,
+                arrows     : true,
+                pagination : true,
+            }).mount();
+        });
+    }
 </script> 
